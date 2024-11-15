@@ -42,6 +42,13 @@ module Zman
       new(Date.today)
     end
 
+    def composite(value:, precision:)
+      fractional = value.to_f / 12
+      year = fractional.floor
+      month = ((fractional - year) * 12).floor
+      new(year, month, precision:)
+    end
+
     attr_reader :year, :month, :value
 
     def initialize(year, month, precision: :exact)
@@ -49,7 +56,7 @@ module Zman
 
       @year = year
       @month = month
-      @value = year * month
+      @value = (year * 12) + month
       @precision = self.class.precision(precision)
       freeze
     end
@@ -79,6 +86,10 @@ module Zman
 
     def precision
       PRECISION_NAMES[@precision]
+    end
+
+    def precision_value
+      @precision
     end
 
     def precision?(name)
