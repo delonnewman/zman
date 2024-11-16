@@ -5,6 +5,7 @@ require_relative 'zman/database'
 require_relative 'zman/schema'
 require_relative 'zman/attribute'
 require_relative 'zman/entity'
+require_relative 'zman/entity_facts'
 require_relative 'zman/string_conversion'
 
 require_relative 'zman/date'
