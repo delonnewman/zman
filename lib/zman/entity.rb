@@ -73,6 +73,10 @@ module Zman
       has?(:id)
     end
 
+    def new?
+      !persisted?
+    end
+
     def [](key)
       @attributes[key]
     end
