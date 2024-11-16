@@ -34,6 +34,16 @@ RSpec.describe Zman::Date do
     end
   end
 
+  context 'era' do
+    it 'ensures that the value is negative when :bce is given' do
+      expect(described_class.new(200, 1, era: :bce).value).to be < 0
+    end
+
+    it 'ensures that the value is positive when :ce is given' do
+      expect(described_class.new(-200, 1, era: :ce).value).to be > 0
+    end
+  end
+
   context 'precision' do
     it "reports the date's precision" do
       expect(described_class.new(1, 2, precision: :circa).precision).to be(:circa)

@@ -50,13 +50,15 @@ module Zman
 
     attr_reader :year, :month, :value
 
-    def initialize(year, month, precision: :exact)
+    def initialize(year, month, era: nil, precision: :exact)
       raise Error, 'invalid date' if year.zero? || month.zero? || month > 12
 
-      @year = year
       @month = month
-      @value = (year * 12) + month
+      @year = era == :bce && year.positive? || era == :ce && year.negative? ? year * -1 : year
+
+      @value = (@year * 12) + @month
       @precision = self.class.precision(precision)
+
       freeze
     end
 
