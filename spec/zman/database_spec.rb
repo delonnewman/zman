@@ -1,0 +1,41 @@
+RSpec.describe Zman::Database do
+  let(:db) { described_class.new }
+
+  it 'can collect facts' do
+    db.add_fact(described_class::Fact.new(1, :plus, 2))
+    db.add_fact(described_class::Fact.new(1, :plus, 3))
+
+    expect(db.dig(1, :plus)).to eq([2, 3])
+  end
+
+  it "can remove facts that it's collected" do
+    db.add_fact(described_class::Fact.new(1, :plus, 2))
+    db.add_fact(described_class::Fact.new(1, :plus, 3))
+    db.remove_fact(described_class::Fact.new(1, :plus, 3))
+
+    expect(db.dig(1, :plus)).to eq([2])
+  end
+
+  it 'can collect facts about entities' do
+    babylon = Zman::Event.new(title: 'Here comes Babylon', date: Zman::Date.new(607, 10, era: :bce))
+    db.add_entity(babylon)
+
+    expect(db.dig(1, 'Zman::Event#title')).to eq(['Here comes Babylon'])
+  end
+
+  it "doesn't collect facts about composite attributes" do
+    babylon = Zman::Event.new(title: 'Here comes Babylon', date: Zman::Date.new(607, 10, era: :bce))
+    db.add_entity(babylon)
+
+    expect(db.dig(1, 'Zman::Event#date')).to be_nil
+  end
+
+  it 'collects facts about attributes that compose composite attributes' do
+    date = Zman::Date.new(607, 10, era: :bce)
+    babylon = Zman::Event.new(title: 'Here comes Babylon', date:)
+    db.add_entity(babylon)
+
+    expect(db.dig(1, 'Zman::Event#date_value')).to eq([date.value])
+    expect(db.dig(1, 'Zman::Event#date_precision_value')).to eq([date.precision_value])
+  end
+end
