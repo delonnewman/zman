@@ -18,10 +18,13 @@ module Zman
     end
 
     def add_entity(entity)
-      EntityFacts.new(entity, new_entity_id).collect.each do |fact|
-        add_fact(fact)
+      facts = EntityFacts.new(entity, new_entity_id).collect
+      facts.each { |fact| add_fact(fact) }
+      attributes = facts.each_with_object({}) do |fact, hash|
+        name = fact.attribute.split('#').last.to_sym
+        hash[name] = fact.value
       end
-      self
+      entity.class.new(attributes)
     end
 
     def add_fact(fact)

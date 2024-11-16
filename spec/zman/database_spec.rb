@@ -38,4 +38,14 @@ RSpec.describe Zman::Database do
     expect(db.dig(1, 'Zman::Event#date_value')).to eq([date.value])
     expect(db.dig(1, 'Zman::Event#date_precision_value')).to eq([date.precision_value])
   end
+
+  it 'creates unique ids for each entity' do
+    babylon = Zman::Event.new(title: 'Here comes Babylon', date: Zman::Date.new(607, 10, era: :bce))
+    id1 = db.add_entity(babylon).id
+
+    note = Zman::Note.new(event_id: id1, content: 'This is a test')
+    id2 = db.add_entity(note).id
+
+    expect(id1).not_to eq(id2)
+  end
 end
