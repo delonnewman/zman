@@ -23,6 +23,14 @@ module Zman
       cardinality == :many
     end
 
+    def db_id?
+      namespace == :db && name == :id
+    end
+
+    def db_update_timestamp?
+      namespace == :db && name == :updated_at
+    end
+
     def class_name
       return unless composite?
 

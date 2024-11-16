@@ -49,8 +49,8 @@ module Zman
       end
 
       def timestamp
-        attribute(:created_at, :time, default: -> { Time.now }, namespace: :timestamp)
-        attribute(:updated_at, :time, default: -> { Time.now }, namespace: :timestamp)
+        attribute(:created_at, :time, default: -> { Time.now }, namespace: :db)
+        attribute(:updated_at, :time, default: -> { Time.now }, namespace: :db)
       end
 
       def composite(name, of:, **options)
