@@ -1,5 +1,3 @@
-require_relative '../../lib/zman'
-
 RSpec.describe Zman::Event do
   it 'composes date objects' do
     date = Zman::Date.new(-1513, 1, precision: :circa)
