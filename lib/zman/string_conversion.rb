@@ -1,15 +1,5 @@
 # frozen_string_literal: true
 
-class String
-  def camelcase(**options)
-    Zman::StringConversion.camelcase(self, **options)
-  end
-
-  def constantize
-    Zman::StringConversion.constantize(self)
-  end
-end
-
 module Zman
   module StringConversion
     module_function
