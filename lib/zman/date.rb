@@ -27,7 +27,6 @@ module Zman
       after: 1,
       before: 2,
       circa: 3,
-      about: 3
     }.freeze
 
     def self.precision(value)
@@ -73,6 +72,17 @@ module Zman
       buffer.join(' ')
     end
     alias inspect to_s
+
+    def ==(other)
+      return false unless other.is_a?(self.class)
+
+      value == other.value
+    end
+    alias eql? ==
+
+    def hash
+      value.hash
+    end
 
     def ce?
       @value.positive?

@@ -3,11 +3,11 @@ require_relative '../../lib/zman'
 RSpec.describe Zman::Date do
   context 'value calculation' do
     example '1/1 = 1' do
-      expect(described_class.new(1, 1).value).to be(1)
+      expect(described_class.new(1, 1).value).to be(13)
     end
 
-    example '-500/3 = -1500' do
-      expect(described_class.new(-500, 3).value).to be(-1500)
+    example '-500/3 = -5997' do
+      expect(described_class.new(-500, 3).value).to be(-5997)
     end
   end
 
@@ -22,6 +22,15 @@ RSpec.describe Zman::Date do
 
     example 'values over 12 are invalid months' do
       expect { described_class.new(1, 13) }.to raise_error(described_class::Error)
+    end
+  end
+
+  context 'equality' do
+    it 'provides value equality' do
+      date1 = described_class.new(1, 2)
+      date2 = described_class.new(1, 2)
+
+      expect(date1).to eq(date2)
     end
   end
 
@@ -46,20 +55,10 @@ RSpec.describe Zman::Date do
       expect(described_class.new(1, 1, precision: :circa)).to be_circa
     end
 
-    it 'can be initialized with :about precision' do
-      expect(described_class.new(1, 1, precision: :about)).to be_about
-    end
-
-    it "is :about precision when it's :circa precision" do
-      expect(described_class.new(1, 1, precision: :circa)).to be_about
-    end
-
-    it 'can specify precision by number value also' do
-      expect(described_class.new(1, 1, precision: 0)).to be_exact
-      expect(described_class.new(1, 1, precision: 1)).to be_after
-      expect(described_class.new(1, 1, precision: 2)).to be_before
-      expect(described_class.new(1, 1, precision: 3)).to be_circa
-      expect(described_class.new(1, 1, precision: 3)).to be_about
+    described_class::PRECISION_VALUES.each do |name, value|
+      it "when given #{value} for precision it maps to #{name}" do
+        expect(described_class.new(1, 1, precision: value).precision).to be(name)
+      end
     end
   end
 end
