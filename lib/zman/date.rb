@@ -41,11 +41,11 @@ module Zman
       new(Date.today)
     end
 
-    def composite(value:, precision:)
-      fractional = value.to_f / 12
+    def self.composite(date_value:, date_precision_value:)
+      fractional = date_value.to_f / 12
       year = fractional.floor
       month = ((fractional - year) * 12).floor
-      new(year, month, precision:)
+      new(year, month, precision: date_precision_value)
     end
 
     attr_reader :year, :month, :value

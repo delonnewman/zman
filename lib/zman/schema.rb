@@ -52,7 +52,7 @@ module Zman
         if attribute.composite? && !value
           value = attribute.composite_class.public_send(
             attribute.constructor,
-            entity_data.with_keys(*attribute.composite_source_attributes)
+            **entity_data.with_keys(*attribute.composite_source_attributes)
           )
         end
         if attribute.composite_source? && !value

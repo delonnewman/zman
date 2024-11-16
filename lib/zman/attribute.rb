@@ -48,7 +48,7 @@ module Zman
     end
 
     def composite_source_attributes
-      option(:composite)
+      option(:composite)&.map { |attribute| :"#{name}_#{attribute}" }
     end
 
     def composite?
