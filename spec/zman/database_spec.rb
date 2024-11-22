@@ -1,5 +1,6 @@
 RSpec.describe Zman::Database do
-  let(:db) { described_class.new }
+  let(:db) { described_class.new(eav_index:) }
+  let(:eav_index) { Zman::Database::EAVIndex.new }
 
   it 'can collect facts' do
     db.add_fact(described_class::Fact.new(1, :plus, 2))

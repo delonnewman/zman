@@ -2,10 +2,13 @@
 
 module Zman
   class Database
+    require_relative 'database/index'
+    require_relative 'database/eav_index'
+
     Fact = Data.define(:ref, :attribute, :value)
 
-    def initialize
-      @eav_index = {}
+    def initialize(eav_index:)
+      @eav_index = eav_index
       @current_entity_id = 0
     end
 
@@ -24,18 +27,12 @@ module Zman
     end
 
     def add_fact(fact)
-      @eav_index[fact.ref] ||= {}
-      @eav_index[fact.ref][fact.attribute] ||= []
-      @eav_index[fact.ref][fact.attribute] << fact.value
+      @eav_index.add(fact)
       self
     end
 
     def remove_fact(fact)
-      values = @eav_index.dig(fact.ref, fact.attribute)
-      return false unless values
-
-      values.delete(fact.value)
-      fact
+      @eav_index.remove(fact)
     end
   end
 end
