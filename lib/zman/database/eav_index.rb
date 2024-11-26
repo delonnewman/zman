@@ -2,18 +2,6 @@
 
 module Zman
   class Database::EAVIndex < Database::Index
-    def initialize(index = nil)
-      @index = index || {}
-    end
-
-    def to_json
-      @index.to_json
-    end
-
-    def dig(*keys)
-      @index.dig(*keys)
-    end
-
     def add(fact)
       @index[fact.ref] ||= {}
       @index[fact.ref][fact.attribute] ||= []
