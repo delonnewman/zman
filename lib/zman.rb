@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'core_ext'
+require_relative 'zman/transactor'
 require_relative 'zman/database'
 require_relative 'zman/schema'
 require_relative 'zman/attribute'
