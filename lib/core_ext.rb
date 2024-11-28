@@ -1,5 +1,5 @@
 class Hash
-  def with_keys(*keys)
+  def pick(*keys)
     keys.each_with_object({}) do |key, hash|
       hash[key] = fetch(key) if key?(key)
     end

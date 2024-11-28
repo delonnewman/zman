@@ -2,6 +2,8 @@
 
 module Zman
   class Attribute
+    include Types
+
     attr_reader :entity_class, :name
 
     def initialize(entity_class, name, **options)
@@ -41,6 +43,20 @@ module Zman
       return unless composite?
 
       class_name.constantize
+    end
+
+    def valid?(value)
+      type === value
+    end
+
+    def parse(value)
+      return value unless type.respond_to?(:parse)
+
+      type.parse(value)
+    end
+
+    def type
+      option(:type, Any)
     end
 
     def constructor
@@ -86,8 +102,8 @@ module Zman
       value.call
     end
 
-    def option(name)
-      @options[name]
+    def option(name, default = nil)
+      @options.fetch(name, default)
     end
   end
 end

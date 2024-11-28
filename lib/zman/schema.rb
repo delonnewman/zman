@@ -49,16 +49,19 @@ module Zman
     def parse(entity_class, entity_data)
       attributes(entity_class).each_with_object({}) do |attribute, init_data|
         value = entity_data[attribute.name] || attribute.default
+
         if attribute.composite? && !value
           value = attribute.composite_class.public_send(
             attribute.constructor,
-            **entity_data.with_keys(*attribute.composite_source_attributes)
+            **entity_data.pick(*attribute.composite_source_attributes)
           )
         end
+
         if attribute.composite_source? && !value
           value = entity_data[attribute.composite_attribute].public_send(attribute.composite_source_method)
         end
-        init_data[attribute.name] = value unless value.nil?
+
+        init_data[attribute.name] = attribute.parse(value) unless value.nil?
       end
     end
   end

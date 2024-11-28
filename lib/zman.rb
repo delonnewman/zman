@@ -4,6 +4,7 @@ require 'logger'
 require 'sqlite3'
 
 require_relative 'core_ext'
+require_relative 'zman/types'
 require_relative 'zman/schema'
 require_relative 'zman/attribute'
 require_relative 'zman/entity'
@@ -12,7 +13,7 @@ require_relative 'zman/string_conversion'
 require_relative 'zman/date'
 require_relative 'zman/event'
 require_relative 'zman/note'
-require_relative 'zman/event_repository'
+require_relative 'zman/events_repository'
 
 module Zman
   DATABASE_FILE = Pathname(__dir__).join('../db/zman.sqlite3')

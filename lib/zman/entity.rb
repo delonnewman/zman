@@ -2,6 +2,9 @@
 
 module Zman
   class Entity
+    include Types
+    extend Types
+
     @@schema = nil
     def self.schema
       @@schema ||= Schema.new
@@ -36,7 +39,7 @@ module Zman
 
       def inherited(subclass)
         super
-        subclass.schema.define_attribute(subclass, :id, type: :integer, namespace: :db, optional: true)
+        subclass.schema.define_attribute(subclass, :id, type: Integer, namespace: :db, optional: true)
       end
 
       def attribute(name, type, **options)
@@ -45,12 +48,12 @@ module Zman
       alias has attribute
 
       def references(referent, **options)
-        attribute(:"#{referent}_id", :integer, **options)
+        attribute(:"#{referent}_id", Integer, **options)
       end
 
       def timestamp
-        attribute(:created_at, :time, default: -> { Time.now }, namespace: :db)
-        attribute(:updated_at, :time, default: -> { Time.now }, namespace: :db)
+        attribute(:created_at, Timestamp, default: -> { Time.now }, namespace: :db)
+        attribute(:updated_at, Timestamp, default: -> { Time.now }, namespace: :db)
       end
 
       def composite(name, of:, **options)

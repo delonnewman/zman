@@ -2,7 +2,7 @@
 
 module Zman
   class Note < Entity
-    has :content, :string
+    has :content, String
     references :event
     timestamp
   end
