@@ -10,5 +10,4 @@ make use of websockets to enable bidirectional data flow.
 ** References
 https://www.codeotaku.com/journal/2024-11/streaming-rack/index
 
-* Generalize the encode / decode protocol for types implement for entities.
-
+* Generalize the encode / decode protocol for types implement for Entity and Zman::Date
