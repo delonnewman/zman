@@ -46,7 +46,7 @@ module Zman
       validate(entity_class, entity_data).empty?
     end
 
-    def init(entity_class, entity_data)
+    def parse(entity_class, entity_data)
       attributes(entity_class).each_with_object({}) do |attribute, init_data|
         value = entity_data[attribute.name] || attribute.default
         if attribute.composite? && !value

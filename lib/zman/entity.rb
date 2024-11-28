@@ -24,8 +24,8 @@ module Zman
         schema.valid?(self, entity_data)
       end
 
-      def init(entity_data)
-        schema.init(self, entity_data)
+      def parse(entity_data)
+        schema.parse(self, entity_data)
       end
 
       def has?(name)
@@ -65,7 +65,7 @@ module Zman
     attr_reader :attributes
 
     def initialize(attributes)
-      @attributes = self.class.init(attributes)
+      @attributes = self.class.parse(attributes)
       self.class.validate!(@attributes)
     end
 
