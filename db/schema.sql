@@ -1,12 +1,12 @@
 create table if not exists events (
         id integer primary key autoincrement,
         date_value integer not null, -- months since 1 BCE
-        date_precision integer not null, -- 0 (exact), 1 (after), 2 (before), 3 (circa, about)
+        date_precision_value integer not null, -- 0 (exact), 1 (after), 2 (before), 3 (circa, about)
         title varchar(255) not null,
         created_at timestamp not null,
         updated_at timestamp not null
 );
-create index if not exists events_date_and_precision on events(date, precision);
+create index if not exists events_date_and_precision on events(date_value, date_precision_value);
 create index if not exists events_title on events(title);
 create index if not exists events_timestamps on events(created_at, updated_at);
 
