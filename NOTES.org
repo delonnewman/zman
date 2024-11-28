@@ -1,11 +1,14 @@
 #+title: Notes
 
-Remove controller go with a more morphic inspired design.  With a world object
-that manages interactions and morphs that decorate entities with whatever
-information the frontend needs. Use morphs on the frontend as well starting
-with primitives that reify and generalize the facilities of the canvas. Maybe
+* Remove controller go with a more morphic inspired design.
+With a world object that manages interactions and morphs that
+decorate entities with whatever information the frontend needs.
+Use morphs on the frontend as well starting with primitives that
+reify and generalize the facilities of the canvas. Maybe
 make use of websockets to enable bidirectional data flow.
 
-* References
-
+** References
 https://www.codeotaku.com/journal/2024-11/streaming-rack/index
+
+* Generalize the encode / decode protocol for types implement for entities.
+
