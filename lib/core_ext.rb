@@ -4,6 +4,17 @@ class Hash
       hash[key] = fetch(key) if key?(key)
     end
   end
+
+  def encode_keys(namespace)
+    transform_keys do |key|
+      name = "#{namespace}[#{key}]"
+      if key.is_a?(Symbol)
+        name.to_sym
+      else
+        name
+      end
+    end
+  end
 end
 
 class String

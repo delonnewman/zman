@@ -60,27 +60,15 @@ module Zman
     end
 
     def constructor
-      option(:constructor)
+      option(:constructor, :parse)
     end
 
-    def composite_source_attributes
-      option(:composite)&.map { |attribute| :"#{name}_#{attribute}" }
+    def composite_keys
+      option(:composite)
     end
 
     def composite?
       !!option(:composite)
-    end
-
-    def composite_source?
-      !!composite_source_method
-    end
-
-    def composite_attribute
-      option(:composite_attribute)
-    end
-
-    def composite_source_method
-      option(:composite_source_method)
     end
 
     def cardinality

@@ -28,7 +28,11 @@ module Zman
       end
 
       def parse(entity_data)
-        schema.parse(self, entity_data)
+        new(init(entity_data))
+      end
+
+      def init(entity_data)
+        schema.init(self, entity_data)
       end
 
       def has?(name)
@@ -56,19 +60,16 @@ module Zman
         attribute(:updated_at, Timestamp, default: -> { Time.now }, namespace: :db)
       end
 
-      def composite(name, of:, **options)
+      def composite(name, type, of:, **options)
         attribute_names = of
-        attribute_names.each do |attribute_name, type|
-          attribute(:"#{name}_#{attribute_name}", type, composite_source_method: attribute_name, composite_attribute: name)
-        end
-        attribute(name, name, **options.merge(composite: attribute_names.keys))
+        attribute(name, type, **options.merge(composite: attribute_names.keys))
       end
     end
 
     attr_reader :attributes
 
     def initialize(attributes)
-      @attributes = self.class.parse(attributes)
+      @attributes = self.class.init(attributes)
       self.class.validate!(@attributes)
     end
 

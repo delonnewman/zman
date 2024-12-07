@@ -3,8 +3,9 @@
 module Zman
   class Event < Entity
     has :title, String
-    composite :start_on, of: { value: Integer, precision: Integer }, to: Zman::Date
-    composite :end_on, of: { value: Integer, precision: Integer }, to: Zman::Date, optional: true
+    composite :start_on, Zman::Date, of: { value: Integer, precision: Integer }
+    composite :end_on, Zman::Date, of: { value: Integer, precision: Integer }, optional: true
+    references :layer
     timestamp
 
     def date

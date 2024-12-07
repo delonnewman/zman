@@ -21,34 +21,32 @@ module Zman
       'December'
     ].freeze
 
-    PRECISION_NAMES = %i[exact after before circa].freeze
-    PRECISION_VALUES = {
-      exact: 0,
-      after: 1,
-      before: 2,
-      circa: 3,
-    }.freeze
-
-    def self.precision(value)
-      PRECISION_VALUES.fetch(value) do
-        raise "unknown date precision #{value.inspect}" unless PRECISION_NAMES[value]
-
-        value
-      end
-    end
-
     def self.today
       new(Date.today)
     end
 
-    def self.composite(date_value:, date_precision_value:)
-      fractional = date_value.to_f / 12
-      year = fractional.floor
-      month = ((fractional - year) * 12).floor
-      new(year, month, precision: date_precision_value)
+    def self.parse(value)
+      case value
+      in self
+        value
+      in value: nil, precision: nil
+        nil
+      in value:, precision:
+        from_parts(value:, precision:)
+      else
+        raise "invalid value: #{value.inspect}:#{value.class}"
+      end
     end
 
-    attr_reader :year, :month, :value
+    def self.from_parts(value:, precision:)
+      fractional = value.to_f / 12
+      year = fractional.floor
+      month = ((fractional - year) * 12).floor
+
+      new(year, month, precision:)
+    end
+
+    attr_reader :year, :month, :value, :precision
 
     def initialize(year, month, era: nil, precision: :exact)
       raise Error, 'invalid date' if year.zero? || month.zero? || month > 12
@@ -57,7 +55,7 @@ module Zman
       @year = era == :bce && year.positive? || era == :ce && year.negative? ? year * -1 : year
 
       @value = (@year * 12) + @month
-      @precision = self.class.precision(precision)
+      @precision = Precision.new(precision)
 
       freeze
     end
@@ -96,16 +94,8 @@ module Zman
     end
     alias bc? bce?
 
-    def precision
-      PRECISION_NAMES[@precision]
-    end
-
-    def precision_value
-      @precision
-    end
-
     def precision?(name)
-      @precision == PRECISION_VALUES[name]
+      @precision.name == name
     end
 
     def exact?

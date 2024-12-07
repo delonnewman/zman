@@ -5,7 +5,15 @@ module Zman
     TABLE = :events
 
     def self.attribute_names
-      @attribute_names ||= Event.attributes.reject(&:composite?).map(&:name)
+      @attribute_names ||= Event.attributes.flat_map do |attribute|
+        if attribute.composite?
+          attribute.composite_keys.map do |key|
+            :"#{attribute.name}[#{key}]"
+          end
+        else
+          [attribute.name]
+        end
+      end
     end
 
     def initialize(db, logger = Logger.new($stderr))
@@ -13,61 +21,92 @@ module Zman
       @logger = logger
     end
 
-    ALL_QUERY = <<~SQL
-      select #{attribute_names.join(', ')} from #{TABLE};
-    SQL
-    private_constant :ALL_QUERY
-
     def all
       @logger.info("#{self.class}#all - SQL - #{ALL_QUERY}")
 
       entities = []
       @db.query(ALL_QUERY).each_hash do |row|
-        entities << Event.new(row.transform_keys!(&:to_sym))
+        entities << parse_row(row)
       end
       entities
     end
 
-    FIND_QUERY = <<~SQL
-      select #{attribute_names.join(', ')} from #{TABLE} where id = ? limit 1
-    SQL
-    private_constant :FIND_QUERY
-
     def find(id)
       @logger.info("#{self.class}#find - SQL - #{FIND_QUERY} #{id.inspect}")
 
-      attributes = @db.query(FIND_QUERY, id).next_hash.transform_keys!(&:to_sym)
-      Event.new(attributes)
+      row = @db.query(FIND_QUERY, id).next_hash
+      parse_row(row)
     end
 
-    ADD_QUERY = <<~SQL
-      insert into #{TABLE} (#{attribute_names.join(', ')}) values (#{attribute_names.count.times.map { '?' }.join(', ')})
-    SQL
-    private_constant :ADD_QUERY
-
     def add(event)
-      values = values_of(event)
-      @logger.info("#{self.class}#add - SQL - #{SQL} #{values.inspect}")
+      data = insert_data(event)
+      @logger.info("#{self.class}#add - SQL - #{ADD_QUERY} - (#{data.values.count} values) #{data.values.map(&:inspect).join(', ')}")
 
-      @db.execute(SQL, values)
+      add_query.execute(*data.values)
       find(@db.last_insert_row_id)
     end
 
-    private
-
-    def values_of(event)
-      attribute_names.map do |name|
-        case (value = event[name])
-        when Time
-          value.to_s
+    def insert_data(event)
+      Event.attributes.each_with_object({}) do |attribute, data|
+        value = event[attribute.name]
+        if attribute.composite?
+          attribute.composite_keys.map do |method|
+            data[:"#{attribute.name}[#{method}]"] =
+              if value.nil?
+                value
+              else
+                db_value(value.public_send(method))
+              end
+          end
         else
-          value
+          data[attribute.name] = db_value(value)
         end
       end
     end
 
-    def attribute_names
-      self.class.attribute_names
+    private
+
+    ADD_QUERY = <<~SQL
+      insert into #{TABLE} ("#{attribute_names.join('", "')}") values (#{attribute_names.count.times.map { '?' }.join(', ')})
+    SQL
+    private_constant :ADD_QUERY
+
+    def add_query
+      @add_query ||= @db.prepare(ADD_QUERY)
+    end
+
+    FIND_QUERY = <<~SQL
+      select "#{attribute_names.join('", "')}" from #{TABLE} where id = ? limit 1
+    SQL
+    private_constant :FIND_QUERY
+
+    def find_query
+      @find_query ||= @db.prepare(FIND_QUERY)
+    end
+
+    ALL_QUERY = <<~SQL
+      select "#{attribute_names.join('", "')}" from #{TABLE};
+    SQL
+    private_constant :ALL_QUERY
+
+    def all_query
+      @all_query ||= @db.prepare(ALL_QUERY)
+    end
+
+    def parse_row(row)
+      nested = El::DataUtils.parse_nested_hash_keys(row, symbolize_keys: true)
+
+      Event.parse(nested)
+    end
+
+    def db_value(value)
+      if value.respond_to?(:value)
+        value.value
+      elsif value.is_a?(Time)
+        value.to_s
+      else
+        value
+      end
     end
   end
 end

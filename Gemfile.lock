@@ -1,7 +1,15 @@
+GIT
+  remote: https://github.com/delonnewman/el-toolkit.git
+  revision: 0bfa1a2cdfbb21ac6e8d062b12c7dad0c7e3d8f4
+  specs:
+    el-toolkit (0.0.1)
+      rack
+
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.5.0)
+    rack (3.1.8)
     rake (13.2.1)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
@@ -22,6 +30,7 @@ PLATFORMS
   arm64-darwin
 
 DEPENDENCIES
+  el-toolkit!
   rake
   rspec
   sqlite3
