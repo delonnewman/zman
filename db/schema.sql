@@ -2,7 +2,7 @@ create table if not exists layers (
        id integer primary key autoincrement,
        slug varying char not null,
        name varying char not null,
-       description varying char not null,
+       description varying char,
        created_at timestamp not null,
        updated_at timestamp not null
 );
