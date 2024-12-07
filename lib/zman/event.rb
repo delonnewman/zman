@@ -3,6 +3,7 @@
 module Zman
   class Event < Entity
     has :title, String
+    has :notes, EnumerableOf[Zman::Note]
     composite :start_on, Zman::Date, of: { value: Integer, precision: Integer }
     composite :end_on, Zman::Date, of: { value: Integer, precision: Integer }, optional: true
     references :layer
