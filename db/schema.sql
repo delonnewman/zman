@@ -13,8 +13,8 @@ create table if not exists events (
         id integer primary key autoincrement,
         start_on_value integer not null, -- months since 1 BCE
         start_on_precision integer not null, -- 0 (exact), 1 (after), 2 (before), 3 (circa, about)
-        end_on_value integer not null, -- months since 1 BCE
-        end_on_precision integer not null, -- 0 (exact), 1 (after), 2 (before), 3 (circa, about)
+        end_on_value integer, -- months since 1 BCE
+        end_on_precision integer, -- 0 (exact), 1 (after), 2 (before), 3 (circa, about)
         layer_id integer not null references layers(id),
         title varying char not null,
         created_at timestamp not null,
