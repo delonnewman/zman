@@ -70,6 +70,11 @@ module Zman
 
     def initialize(attributes)
       @attributes = self.class.init(attributes)
+      self.class.attributes.each do |attribute|
+        if @attributes[attribute.name].nil? && attribute.default.respond_to?(:call)
+          @attributes[attribute.name] = instance_exec(&attribute.default)
+        end
+      end
       self.class.validate!(@attributes)
     end
 

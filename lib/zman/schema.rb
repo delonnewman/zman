@@ -48,7 +48,9 @@ module Zman
 
     def init(entity_class, entity_data)
       attributes(entity_class).each_with_object({}) do |attribute, init_data|
-        value = entity_data[attribute.name] || attribute.default
+        value = entity_data.fetch(attribute.name) do
+          attribute.default unless attribute.default.respond_to?(:call)
+        end
 
         if attribute.composite? && value
           value = attribute.type.public_send(

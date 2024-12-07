@@ -84,10 +84,7 @@ module Zman
     end
 
     def default
-      value = option(:default)
-      return value unless value.respond_to?(:call)
-
-      value.call
+      option(:default)
     end
 
     def option(name, default = nil)
