@@ -27,7 +27,7 @@ module Zman
         schema.valid?(self, entity_data)
       end
 
-      def parse(entity_data)
+      def decode(entity_data)
         new(init(entity_data))
       end
 

@@ -15,6 +15,12 @@ module Zman
       end
     end
 
+    EnumerableOf = A do |type|
+      lambda do |it|
+        Enumerable === it && it.all? { |it| type === it }
+      end
+    end
+
     module Timestamp
       module_function
 
@@ -22,7 +28,7 @@ module Zman
         Time === value
       end
 
-      def parse(value)
+      def decode(value)
         case value
         when String
           Time.new(value)
@@ -31,6 +37,10 @@ module Zman
         else
           raise "#{value.inspect}:#{value.class} cannot be coerced to a #{self.class}"
         end
+      end
+
+      def encode(value)
+        value.to_s
       end
     end
   end

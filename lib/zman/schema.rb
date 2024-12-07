@@ -59,7 +59,7 @@ module Zman
           )
         end
 
-        init_data[attribute.name] = attribute.parse(value) unless value.nil?
+        init_data[attribute.name] = attribute.decode(value) unless value.nil?
       end
     end
   end

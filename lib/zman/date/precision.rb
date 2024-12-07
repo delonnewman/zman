@@ -14,8 +14,12 @@ module Zman
     attr_reader :value
     alias to_i value
 
-    def self.parse(value)
+    def self.decode(value)
       new(value)
+    end
+
+    def self.encode(value)
+      value.to_i
     end
 
     def self.type

@@ -49,10 +49,10 @@ module Zman
       type === value
     end
 
-    def parse(value)
-      return value unless type.respond_to?(:parse)
+    def decode(value)
+      return value unless type.respond_to?(:decode)
 
-      type.parse(value)
+      type.decode(value)
     end
 
     def type
@@ -60,7 +60,7 @@ module Zman
     end
 
     def constructor
-      option(:constructor, :parse)
+      option(:constructor, :decode)
     end
 
     def composite_keys

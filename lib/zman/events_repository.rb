@@ -96,7 +96,7 @@ module Zman
     def parse_row(row)
       nested = El::DataUtils.parse_nested_hash_keys(row, symbolize_keys: true)
 
-      Event.parse(nested)
+      Event.decode(nested)
     end
 
     def db_value(value)

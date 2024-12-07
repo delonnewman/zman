@@ -25,7 +25,7 @@ module Zman
       new(Date.today)
     end
 
-    def self.parse(value)
+    def self.decode(value)
       case value
       in self
         value
