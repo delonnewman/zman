@@ -25,4 +25,12 @@ module Zman
   def self.db
     SQLite3::Database.new(DATABASE_FILE)
   end
+
+  def self.env
+    ENV.fetch('ZMAN_ENV') do
+      ENV.fetch('RACK_ENV') do
+        'development'
+      end
+    end
+  end
 end

@@ -26,6 +26,7 @@ module Zman
 
       entities = []
       @db.query(ALL_QUERY).each_hash do |row|
+        @logger.info("LOAD - #{row.inspect}")
         entities << parse_row(row)
       end
       entities

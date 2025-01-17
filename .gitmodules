@@ -1,0 +1,3 @@
+[submodule "vendor/el"]
+	path = vendor/el
+	url = git@github.com:delonnewman/el-toolkit.git
