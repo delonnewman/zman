@@ -9,7 +9,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.5.0)
-    rack (3.1.8)
+    rack (3.1.10)
     rake (13.2.1)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
@@ -25,9 +25,11 @@ GEM
       rspec-support (~> 3.12.0)
     rspec-support (3.12.0)
     sqlite3 (2.0.2-arm64-darwin)
+    sqlite3 (2.0.2-x86_64-linux-gnu)
 
 PLATFORMS
   arm64-darwin
+  x86_64-linux
 
 DEPENDENCIES
   el-toolkit!
